@@ -1,17 +1,16 @@
 var PutIO = require('put.io-v2')
+var config = require('config')
 
 function fetch(lastDownloadAt) {
   console.log("Log into put.io")
-  var api = new PutIO(oauth_token)
+  var api = new PutIO(config.authToken)
 
+  console.log("Iterate the available files")
   api.files.list(0, function(data) {
     for (var i in data.files) {
       console.log(data.files[i].name)
     }
   })
-
-
-  console.log("List the available files")
 
   console.log("Filter the list of files to those newer than our last download timestamp")
 
