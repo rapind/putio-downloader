@@ -1,15 +1,25 @@
+var _ = require('lodash')
 var PutIO = require('put.io-v2')
 var config = require('./config')
 
-function fetch(lastDownloadAt) {
+var queue = []
+
+function addToQueue(url) {
+  queue.push(url)
+}
+
+function fetchNew() {
   console.log("Log into put.io")
   var api = new PutIO(config.authToken)
 
   console.log("Iterate the available files")
   api.files.list(0, function(data) {
-    for (var i in data.files) {
-      console.log(data.files[i].name)
-    }
+    _.each(data.files, function(file) {
+      console.log(file)
+
+      var url = api.files.download(file.id)
+      addToQueue(url)
+    })
   })
 
   console.log("Filter the list of files to those newer than our last download timestamp")
@@ -23,4 +33,16 @@ function fetch(lastDownloadAt) {
   console.log("Recurse with a set timeout")
 }
 
-fetch(new Date())
+function processQueue() {
+  console.log("Process Queue")
+
+  fetchNew()
+
+  _.each(queue, function(url) {
+    console.log("Download " + url)
+  })
+
+  setTimeout(processQueue, 5000)
+}
+
+processQueue()
