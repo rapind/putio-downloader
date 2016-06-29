@@ -1,5 +1,5 @@
 var PutIO = require('put.io-v2')
-var config = require('config')
+var config = require('./config')
 
 function fetch(lastDownloadAt) {
   console.log("Log into put.io")
