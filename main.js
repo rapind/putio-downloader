@@ -5,7 +5,19 @@ var config = require('./config')
 var queue = []
 
 function addToQueue(url) {
-  queue.push(url)
+  existing = _.find(queue, function(job) {
+    job.url === url
+  })
+
+  if (existing === null) {
+    queue.push({ url: url, state: "pending" })
+  }
+}
+
+function removeFromQueue(url) {
+  queue = _.filter(queue, function(job) {
+    job.url === url
+  })
 }
 
 function fetchNew() {
@@ -23,14 +35,6 @@ function fetchNew() {
   })
 
   console.log("Filter the list of files to those newer than our last download timestamp")
-
-  console.log("Loop through the available files")
-
-    console.log("Download the file")
-
-    console.log("Delete the file")
-
-  console.log("Recurse with a set timeout")
 }
 
 function processQueue() {
@@ -38,10 +42,14 @@ function processQueue() {
 
   fetchNew()
 
-  _.each(queue, function(url) {
-    console.log("Download " + url)
+  queue = _.map(queue, function(job) {
+    console.log("Download " + job.url)
+    job.state = "downloading"
+    downloadFile(job.url) // TODO: async
+    return job
   })
 
+  console.log("Queue Status:", queue)
   setTimeout(processQueue, 5000)
 }
 
