@@ -1,9 +1,9 @@
-var _ = require('lodash')
+const _ = require('lodash')
 
 function add (state, data) {
-  var existing = _.find(state, function (job) {
+  const existing = _.find(state, job =>
     job.id === data.id
-  })
+  )
 
   if (existing) {
     console.error('Job exists', existing)
@@ -14,7 +14,7 @@ function add (state, data) {
 }
 
 function updateStatus (state, id, status) {
-  return _.map(state, function (job) {
+  return _.map(state, job => {
     if (job.id === id) {
       _.assign(job, { status: status })
     }
@@ -23,9 +23,9 @@ function updateStatus (state, id, status) {
 }
 
 function remove (state, id) {
-  return _.filter(state, function (job) {
+  return _.filter(state, job =>
     job.id === id
-  })
+  )
 }
 
 module.exports = function (state, action) {

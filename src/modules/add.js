@@ -9,8 +9,8 @@ module.exports = function (state) {
   const api = new PutIO(config.authToken)
 
   console.log('Iterate the available files')
-  api.files.list(0, function (data) {
-    _.each(data.files, function (file) {
+  api.files.list(0, data =>
+    _.each(data.files, file => {
       console.log('Add to the queue', file.id, file.name)
       // Get the download URL
       const url = api.files.download(file.id)
@@ -25,7 +25,7 @@ module.exports = function (state) {
 
       newState = queue(state, { type: 'ADD', job: job })
     })
-  })
+  )
 
   return newState
 }
