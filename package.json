@@ -4,13 +4,17 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "coffee src/index.coffee --nodejs",
+    "build": "coffee -c -m src/index.coffee -o build/index.js",
+    "test": "coffee tests/index.coffee --nodejs"
   },
-  "author": "",
+  "author": "Dave Rapin",
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.13.1",
     "put.io-v2": "0.0.2"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2"
   }
 }
