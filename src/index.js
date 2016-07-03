@@ -1,8 +1,10 @@
-const add = require('./modules/add')
-const download = require('./modules/download')
-const remove = require('./modules/remove')
+import { List } from 'immutable'
 
-var state = []
+import add from './modules/add'
+import download from './modules/download'
+import remove from './modules/remove'
+
+const state = List()
 
 function main () {
   console.log('Next event loop', new Date())

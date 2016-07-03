@@ -1,9 +1,11 @@
-const _ = require('lodash')
-const http = require('http')
-const fs = require('fs')
+import _ from 'lodash'
+import http from 'http'
+import fs from 'fs'
 
-const config = require('../config')
-const queue = require('./queue')
+import config from '../config'
+import queue from './queue'
+
+const MAX_DOWNLOADING = 3
 
 function downloadFile (name, url, cb) {
   console.log('Download file', name, url)
@@ -23,21 +25,23 @@ function downloadFile (name, url, cb) {
 module.exports = state => {
   var newState = {}
 
-  _.each(state.queue, job => {
-    if (job.status !== 'pending') {
-      return job
-    }
-
-    newState = queue(state, { type: 'UPDATE_STATUS', id: job.id, status: 'downloaded' })
+  _.filter(state, job =>
+    job.status === 'pending'
+  ).each(job => {
+    newState = queue(state, { type: 'UPDATE_STATUS', id: job.id, status: 'downloading' })
     downloadFile(job.url, err => {
       if (err) {
-        newState = queue(state, { type: 'UPDATE_STATUS', id: job.id, status: 'failed' })
+        newState = queue(state, { type: 'UPDATE_STATUS', id: job.id, status: 'pending', attempts: job.attempts + 1 })
         console.error('Unable to download', job)
       } else {
-        newState = queue(state, { type: 'UPDATE_STATUS', id: job.id, status: 'downloaded' })
+        newState = queue(state, { type: 'UPDATE_STATUS', id: job.id, status: 'done' })
       }
     })
-    return job
+
+    // TODO - fix this, totally broken
+    if (newState.length >= MAX_DOWNLOADING) {
+      break
+    }
   })
 
   return newState

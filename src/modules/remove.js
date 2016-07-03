@@ -1,8 +1,8 @@
-const _ = require('lodash')
-const PutIO = require('put.io-v2')
+import _ from 'lodash'
+import PutIO from 'put.io-v2'
 
-const config = require('../config')
-const queue = require('./queue')
+import config from '../config'
+import queue from './queue'
 
 function removeFile (id, cb) {
   console.log('TODO', 'Remove file', id)

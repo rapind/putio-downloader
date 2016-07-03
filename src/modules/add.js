@@ -1,11 +1,11 @@
-const _ = require('lodash')
-const PutIO = require('put.io-v2')
+import _ from 'lodash'
+import PutIO from 'put.io-v2'
 
-const config = require('../config')
-const queue = require('./queue')
+import config from '../config'
+import queue from './queue'
 
 module.exports = function (state) {
-  var newState = {}
+  var newState = state
   const api = new PutIO(config.authToken)
 
   console.log('Iterate the available files')
@@ -23,7 +23,7 @@ module.exports = function (state) {
         addedAt: new Date()
       }
 
-      newState = queue(state, { type: 'ADD', job: job })
+      newState = queue(newState, { type: 'ADD', job: job })
     })
   )
 

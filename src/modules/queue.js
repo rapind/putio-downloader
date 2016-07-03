@@ -1,4 +1,4 @@
-const _ = require('lodash')
+import _ from 'lodash'
 
 function add (state, data) {
   const existing = _.find(state, job =>
@@ -28,7 +28,7 @@ function remove (state, id) {
   )
 }
 
-module.exports = function (state, action) {
+export function (state, action) {
   switch (action.type) {
     case 'ADD':
       return add(state, action.job)
